@@ -8,19 +8,15 @@ const register = async(req, res) => {
     if(!name || !email || !password){
         throw new CustomError.BadRequestError('please provide name, email, password')
     }
-   
     const isEmailExist = await User.findOne({email: email});
     if(isEmailExist){
         throw new CustomError.BadRequestError('email already exist')
     }
     const NumOfAccounts = await User.countDocuments({});
     const role =(NumOfAccounts === 0)? 'admin' : 'user'
-
     const user = await User.create({name, email, password, role});
-
     const tokenUser = createTokenUser(user);
     attachCookiesToResponse(res, tokenUser)
-
     res.status(StatusCodes.CREATED).json({user: tokenUser});
 }
 
@@ -56,5 +52,4 @@ const logout = async(req, res) => {
     })
     res.status(StatusCodes.OK).json({msg: 'log out'})
 }
-
 module.exports = {login, logout, register}

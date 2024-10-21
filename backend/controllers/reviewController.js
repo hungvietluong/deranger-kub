@@ -12,7 +12,6 @@ const createReview = async(req, res) => {
     if(!product || !rating || !comment || !title){
         throw new CustomError.BadRequestError('please provide product, title, rating and comment')
     }
-
     const user = req.user.UserId;
     const username = req.user.name;
     const dbProduct = await Product.findOne({_id: product});
@@ -20,7 +19,6 @@ const createReview = async(req, res) => {
     if(!dbProduct){
         throw new CustomError.NotFoundError(`no product with id ${product} found`)
     }
-
     const review = await Review.create({
         product: dbProduct._id,
         user,
